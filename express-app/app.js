@@ -1,41 +1,45 @@
 const express = require("express");
-const exphbs = require("express-handlebars");
+const path = require("path");
+const hbs = require("hbs");
 
 const app = express();
 
-app.engine("hbs", exphbs.engine({
-  extname: ".hbs"
-}));
-
 app.set("view engine", "hbs");
-app.set("views", "./views");
+app.set("views", path.join(__dirname, "views"));
+
+app.use(express.static(path.join(__dirname, "public")));
 
 const doctors = [
-  { id: 1, name: "Dr. Sharma", department: "Cardiology" },
-  { id: 2, name: "Dr. Mehta", department: "Neurology" }
-];
-
-const appointments = [
-  { patient: "Rahul", doctor: "Dr. Sharma", date: "20 Sept 2026" },
-  { patient: "Priya", doctor: "Dr. Mehta", date: "22 Sept 2026" }
+  { id: 1, name: "Dr. Amit Sharma", specialization: "Cardiologist" },
+  { id: 2, name: "Dr. Neha Patel", specialization: "Dermatologist" },
+  { id: 3, name: "Dr. Raj Mehta", specialization: "Orthopedic" }
 ];
 
 app.get("/", (req, res) => {
-  res.render("home", { title: "Hospital Management System" });
+  res.render("home", {
+    title: "Hospital Management System",
+    doctors: doctors
+  });
 });
 
 app.get("/doctors", (req, res) => {
-  res.render("doctors", { doctors });
+  res.render("home", {
+    title: "Available Doctors",
+    doctors: doctors
+  });
 });
 
 app.get("/doctor/:id", (req, res) => {
   const doctor = doctors.find(d => d.id == req.params.id);
-  if (!doctor) return res.status(404).send("Doctor Not Found");
-  res.render("doctor", { doctor });
-});
 
-app.get("/appointments", (req, res) => {
-  res.render("appointments", { appointments });
+  if (!doctor) {
+    return res.status(404).send("Doctor Not Found");
+  }
+
+  res.send(`
+    <h2>${doctor.name}</h2>
+    <p>Specialization: ${doctor.specialization}</p>
+  `);
 });
 
 app.listen(3000, () => {
