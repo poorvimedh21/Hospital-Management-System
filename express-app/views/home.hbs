@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+    <h1>{{title}}</h1>
+
+    <h2>Available Doctors</h2>
+
+    <ul>
+        {{#each doctors}}
+        <li>
+            <strong>{{this.name}}</strong> - {{this.specialization}}
+        </li>
+        {{/each}}
+    </ul>
+
+</body>
+</html>
